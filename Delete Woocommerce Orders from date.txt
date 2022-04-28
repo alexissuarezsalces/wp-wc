@@ -1,0 +1,14 @@
+/*
+* Delete Woocommerce Orders from date
+* TABLA prefix PS_ ( Change it to the tabla prefix);
+* Delete orders from date < '2020-01-01' ( Change date and operators );
+*/
+
+DELETE ps_woocommerce_order_items, ps_woocommerce_order_itemmeta
+FROM ps_woocommerce_order_items
+JOIN ps_woocommerce_order_itemmeta ON ps_woocommerce_order_items.order_item_id = ps_woocommerce_order_itemmeta.order_item_id
+WHERE ps_woocommerce_order_items.order_id IN ( SELECT ID FROM ps_posts WHERE post_date < '2020-01-01');
+
+DELETE FROM ps_comments WHERE comment_type = 'order_note' AND comment_post_ID IN ( SELECT ID FROM ps_posts WHERE post_date < '2020-01-01');
+DELETE FROM ps_postmeta WHERE post_id IN ( SELECT ID FROM ps_posts WHERE post_type = 'shop_order' AND post_date < '2020-01-01');
+DELETE FROM ps_posts WHERE post_type = 'shop_order' AND post_date < '2020-01-01';
